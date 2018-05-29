@@ -1,0 +1,32 @@
+version: '1'
+services:
+  redcap:
+    container_name: redcap
+    image: SBIMB/redcap-docker
+    ports:
+      - "80:80"
+    volumes:
+      - "./www:/redcap_webroot"
+      - "./logs:/var/log/export"
+    links:
+      - "mailhog:mailhog"
+    depends_on:
+      - mailhog
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - "1026:1025"
+      - "81:8025"
+  mysql:
+    container_name: mysql
+    image: SBIMB/mysql-docker
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./mysql:/var/lib/mysql"
+      - "./logs:/var/log/export"
+    links:
+      - "SBIMB:mysql"
+    depends_on:
+      - mysql
